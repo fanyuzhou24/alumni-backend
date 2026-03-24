@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alumni.system.mapper.SysUserDeptMapper">
+
+	<resultMap type="SysUserDept" id="SysUserDeptResult">
+		<result property="userId"     column="user_id"      />
+		<result property="deptId"     column="dept_id"      />
+	</resultMap>
+	<select id="countUserByDeptIds" resultType="com.alumni.system.entity.dto.UserDeptCountDTO">
+		SELECT
+		dept_id AS deptId,
+		COUNT(*) AS countNum
+		FROM
+		sys_user_dept
+		WHERE
+		dept_id IN
+		<foreach collection="deptIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		GROUP BY dept_id
+	</select>
+
+
+
+</mapper>

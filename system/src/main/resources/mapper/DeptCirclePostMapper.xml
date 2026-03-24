@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alumni.system.mapper.DeptCirclePostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.alumni.system.domain.DeptCirclePost">
+        <id column="id" property="id" />
+        <result column="publish_user_id" property="publishUserId" />
+        <result column="dept_id" property="deptId" />
+        <result column="file_url" property="fileUrl" />
+        <result column="content" property="content" />
+        <result column="topics" property="topics" />
+        <result column="location" property="location" />
+        <result column="is_public" property="isPublic" />
+        <result column="like_count" property="likeCount" />
+        <result column="comment_count" property="commentCount" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, publish_user_id, dept_id, file_url, content, topics, location, is_public, like_count, comment_count, del_flag
+    </sql>
+    <select id="pageByCondition" resultType="com.alumni.system.entity.vo.DeptCirclePostVO">
+        SELECT
+            p.id,
+            p.publish_user_id,
+            p.dept_id,
+            p.file_url,
+            p.content,
+            p.topics,
+            p.location,
+            p.is_public,
+            p.like_count,
+            p.comment_count,
+            p.create_time,
+            IF(l.id IS NULL, 0, 1) AS is_like,
+            su.user_name,
+            su.avatar
+        FROM dept_circle_post p
+                 LEFT JOIN dept_circle_like l
+                           ON p.id = l.post_id
+                               AND l.user_id = #{ro.currentUserId}
+                               AND l.del_flag = '0'
+                 LEFT JOIN sys_user su on su.user_id = p.publish_user_id
+        WHERE p.del_flag = '0'
+          AND p.dept_id = #{ro.deptId}
+        ORDER BY p.create_time DESC
+    </select>
+
+    <select id="listByCondition" resultType="com.alumni.system.entity.vo.DeptCirclePostVO">
+        SELECT
+            p.id,
+            p.publish_user_id,
+            p.dept_id,
+            p.file_url,
+            p.content,
+            p.topics,
+            p.location,
+            p.is_public,
+            p.like_count,
+            p.comment_count,
+            p.create_time,
+            IF(l.id IS NULL, 0, 1) AS is_like
+        FROM dept_circle_post p
+                 LEFT JOIN dept_circle_like l
+                           ON p.id = l.post_id
+                               AND l.user_id = #{userId}
+                               AND l.del_flag = '0'
+        WHERE p.del_flag = '0'
+          AND p.dept_id = #{deptId}
+        ORDER BY p.create_time DESC
+    </select>
+
+</mapper>

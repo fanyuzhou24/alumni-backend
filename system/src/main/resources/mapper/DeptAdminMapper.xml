@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alumni.system.mapper.DeptAdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.alumni.system.domain.DeptAdmin">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="dept_id" property="deptId" />
+        <result column="check_user_id" property="checkUserId" />
+        <result column="file_url" property="fileUrl" />
+        <result column="apply_reason" property="applyReason" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, dept_id, check_user_id, file_url, apply_reason, status, del_flag
+    </sql>
+
+    <sql id="listQuery">
+        SELECT
+        da.*,
+        su.user_name,
+        sd.dept_name
+        FROM dept_admin da
+        LEFT JOIN sys_user su ON da.user_id = su.user_id
+        LEFT JOIN sys_dept sd ON da.dept_id = sd.dept_id
+        <where>
+            da.del_flag = 0
+            <if test="ro.applyUserId != null">
+                AND da.user_id = #{ro.applyUserId}
+            </if>
+            <if test="ro.deptId != null">
+                AND da.dept_id = #{ro.deptId}
+            </if>
+            <if test="ro.status != null">
+                AND da.status = #{ro.status}
+            </if>
+            <if test="ro.deptIds != null and ro.deptIds.size > 0">
+                AND da.dept_id IN
+                <foreach collection="ro.deptIds" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="ro.applyUserName != null and ro.applyUserName != ''">
+                AND su.user_name LIKE CONCAT('%', #{ro.applyUserName}, '%')
+            </if>
+        </where>
+        ORDER BY da.create_time DESC
+    </sql>
+
+    <select id="pageByCondition" resultType="com.alumni.system.entity.vo.DeptAdminVO">
+        <include refid="listQuery"/>
+    </select>
+
+    <select id="listByCondition" resultType="com.alumni.system.entity.vo.DeptAdminVO"
+            parameterType="com.alumni.system.entity.ro.dept.DeptAdminPageRO">
+        <include refid="listQuery"/>
+    </select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alumni.system.mapper.DeptAlbumMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.alumni.system.domain.DeptAlbum">
+        <id column="id" property="id" />
+        <result column="apply_user_id" property="applyUserId" />
+        <result column="dept_id" property="deptId" />
+        <result column="check_user_id" property="checkUserId" />
+        <result column="file_url" property="fileUrl" />
+        <result column="blessings" property="blessings" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, apply_user_id, dept_id, check_user_id, file_url, blessings, status, del_flag
+    </sql>
+
+</mapper>
